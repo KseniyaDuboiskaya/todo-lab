@@ -10,6 +10,10 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 
+// size="large"
+// variant="contained"
+// color="primary"
+
 const useStyles = makeStyles({
     appContainer: {
         marginTop: 100,
@@ -34,12 +38,6 @@ const useStyles = makeStyles({
 function App() {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState('');
-    const [tasks, setTasks] = useState([])
-
-    const handleAddButtonClick = () => {
-        setTasks([...tasks, { text: inputValue, id: new Date().getTime() }])
-        setInputValue('');
-    };
 
     return (
         <Container component="main" className={classes.appContainer}>
@@ -56,33 +54,7 @@ function App() {
                     className={classes.input}
 
                 />
-                <Button
-                    size="large"
-                    variant="contained"
-                    color="primary"
-                    data-selector="add-task"
-                    onClick={handleAddButtonClick}
-                    disabled={!inputValue}
-                >
-                    Add Task
-                </Button>
             </div>
-            <List>
-                {tasks.map((task) => {
-                    return (
-                        <React.Fragment>
-                            <ListItem divider="bool" className={classes.list} data-selector={`task-${task.text}`}>
-                                <Typography
-                                    className={classes.text}
-                                    key={task.id}
-                                >
-                                    {task.text}
-                                </Typography>
-                            </ListItem>
-                        </React.Fragment>
-                    );
-                })}
-            </List>
         </Container>
     );
 }
