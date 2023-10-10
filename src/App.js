@@ -29,17 +29,38 @@ const useStyles = makeStyles({
         display: "flex",
         justifyContent: "space-between",
     },
+    listButtons: {
+        display: 'flex',
+        gap: 20
+    }
 });
 
 function App() {
     const classes = useStyles();
     const [inputValue, setInputValue] = useState('');
     const [tasks, setTasks] = useState([])
+    const [editedTask, setEditedTask] = useState(null);
 
     const handleAddButtonClick = () => {
+        if (editedTask) {
+            setEditedTask(null)
+        }
         setTasks([...tasks, { text: inputValue, id: new Date().getTime() }])
         setInputValue('');
     };
+
+    const handleEditButtonClick = (editedTask) => {
+        const updatedTasks = tasks.filter((task) => task.id !== editedTask.id);
+
+        setEditedTask(editedTask)
+        setInputValue(editedTask.text);
+        setTasks(updatedTasks);
+    };
+
+    const handleDeleteButtonClick = (taskId) => {
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        setTasks(updatedTasks);
+    }
 
     return (
         <Container component="main" className={classes.appContainer}>
@@ -64,7 +85,7 @@ function App() {
                     onClick={handleAddButtonClick}
                     disabled={!inputValue}
                 >
-                    Add Task
+                    {editedTask ? 'Edit Task': 'Add Task'}
                 </Button>
             </div>
             <List>
@@ -78,6 +99,23 @@ function App() {
                                 >
                                     {task.text}
                                 </Typography>
+                                <div className={classes.listButtons}>
+                                    <Button
+                                        onClick={() => handleEditButtonClick(task)}
+                                        variant="contained"
+                                        data-selector="edit-task"
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        onClick={() => handleDeleteButtonClick(task.id)}
+                                        color="secondary"
+                                        variant="contained"
+                                        data-selector="delete-task"
+                                    >
+                                        Delete
+                                    </Button>
+                                </div>
                             </ListItem>
                         </React.Fragment>
                     );

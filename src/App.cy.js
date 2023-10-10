@@ -38,13 +38,42 @@ describe('App', () => {
     })
 
     describe('Click on edit button', () => {
-        it('Selected task should be active in input field, button should change title to "Edit" and selected task is not displayed in the list', () => {
+        it('Selected task should be active in input field and button changed title to "Edit" and task is not displayed in the list', () => {
+            const task = 'Implement add todo feature'
+            mount(<App />)
+            cy.get('input').type(task)
+            cy.get('[data-selector="add-task"]').click()
+            cy.get('[data-selector="add-task"]').contains('Add Task').should('exist')
+
+            cy.get(`[data-selector="task-${task}"]`).get('[data-selector="edit-task"]').click()
+            cy.get('[data-selector="add-task"]').contains('Edit Task').should('exist')
+            cy.get('input').should('have.value', task)
+            cy.get(`[data-selector="task-${task}"]`).should('not.exist')
         })
 
-        it('Update task => edited task should display in the list', () => {
+        it('Update task => updated task should display in the list', () => {
+            const task = 'Implement add todo feature'
+            const updatedTask = 'Updated task'
+            mount(<App />)
+            cy.get('input').type(task)
+            cy.get('[data-selector="add-task"]').click()
+            cy.get(`[data-selector="task-${task}"]`).get('[data-selector="edit-task"]').click()
+            cy.get('input').type('{selectAll}{backspace}')
+            cy.get('input').type(updatedTask)
+            cy.get('[data-selector="add-task"]').click()
+            cy.get(`[data-selector="task-${updatedTask}"]`).should('exist')
+            cy.get(`[data-selector="task-${task}"]`).should('not.exist')
         })
     })
 
     it('Click on Delete Button => task should disappear from the list', () => {
+        const task = 'Implement add todo feature'
+        mount(<App />)
+        cy.get('input').type(task)
+        cy.get('[data-selector="add-task"]').click()
+        cy.get(`[data-selector="task-${task}"]`).should('exist')
+
+        cy.get(`[data-selector="task-${task}"]`).get('[data-selector="delete-task"]').click()
+        cy.get(`[data-selector="task-${task}"]`).should('not.exist')
     })
 })
