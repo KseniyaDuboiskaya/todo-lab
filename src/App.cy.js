@@ -28,6 +28,7 @@ describe('App', () => {
         it('Click on Add Task button => task should be added in the list and input value has been cleaned up', () => {
             const task = 'Implement add todo feature'
             mount(<App />)
+            cy.get(`[data-selector="task-${task}"]`).should('not.exist')
             cy.get('input').type(task)
             cy.get('[data-selector="add-task"]').click()
 
